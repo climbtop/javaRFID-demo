@@ -37,9 +37,10 @@ public class RfidTcpTest {
 		@Override
 		public void onLostConnect() {
 			 System.out.println("onLostConnect");
-			 while(true){
+			 while(mReaderHelper.isAlive()){
 				 try{
 					 mReaderHelper.getmConnector().reConnect();
+					 ((RFIDReaderHelper) mReaderHelper).realTimeInventory((byte) 0xff,(byte)0x01);
 					 break;
 				 }catch(Exception e){
 					 e.printStackTrace();

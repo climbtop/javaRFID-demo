@@ -264,10 +264,10 @@ public abstract class ReaderHelper {
                         }
                     } catch (IOException e) {
                         onLostConnect();
-                        return;
+                        //return;
                     } catch (Exception e) {
                         onLostConnect();
-                        return;
+                        //return;
                     }
                 }
             }
@@ -378,11 +378,12 @@ public abstract class ReaderHelper {
          * @return Succeeded :0, Failed:-1
          */
         private int sendMessage(byte[] btArySenderData) {
-
             try {
-                synchronized (mOutStream) {        //Prevent Concurrent
-                    mOutStream.write(btArySenderData);
-                }
+            	if(mOutStream!=null){
+	                synchronized (mOutStream) {        //Prevent Concurrent
+	                    mOutStream.write(btArySenderData);
+	                }
+            	}
             } catch (IOException e) {
                 onLostConnect();
                 return -1;
