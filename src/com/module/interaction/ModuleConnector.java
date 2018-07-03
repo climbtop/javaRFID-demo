@@ -41,4 +41,10 @@ public interface ModuleConnector {
      * Interrupt the connection;
      */
     void disConnect();
+    
+    /**
+     * Reconnect the connection;
+     */
+    void reConnect() throws Exception;
+    
 }

@@ -36,7 +36,20 @@ public class RfidTcpTest {
 
 		@Override
 		public void onLostConnect() {
-			// TODO Auto-generated method stub
+			 System.out.println("onLostConnect");
+			 while(true){
+				 try{
+					 mReaderHelper.getmConnector().reConnect();
+					 break;
+				 }catch(Exception e){
+					 e.printStackTrace();
+				 }
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			 }
 		}
 		
 	};

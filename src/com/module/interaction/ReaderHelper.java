@@ -15,6 +15,8 @@ public abstract class ReaderHelper {
 
     protected ReaderBase mReader;
     protected RXTXListener mListener;
+    protected ModuleConnector mConnector;
+    
     /**
      * Constructor
      */
@@ -58,6 +60,14 @@ public abstract class ReaderHelper {
             };
         }
     }
+    
+    public void setReader(InputStream in, OutputStream out) throws Exception {
+    	if (in == null || out == null) throw new NullPointerException("in Or out is NULL!");
+
+    	if (mReader == null) throw new NullPointerException("mReader is NULL!");
+    	
+        mReader.resetStream(in, out);
+    }
 
     /**
      * Update the data when have new data return.You can listener the notification
@@ -100,7 +110,7 @@ public abstract class ReaderHelper {
      * @return if true the thread is run,or the thread exit.
      */
     public boolean isAlive() {
-        if (mReader == null) {
+        if (mReader == null || mConnector==null) {
             return false;
         } else {
             return mReader.IsAlive();
@@ -126,6 +136,10 @@ public abstract class ReaderHelper {
     	 if (mReader != null) {
              mReader.signOut();
              mReader = null;
+         }
+    	 if (mConnector != null) {
+    		 mConnector.disConnect();
+             mConnector = null;
          }
     	 mListener = null;
     }
@@ -264,6 +278,30 @@ public abstract class ReaderHelper {
             }
         }
 
+		public void resetStream(InputStream in, OutputStream out) throws Exception {
+        	 try {
+             	if (mInStream != null) {
+             		 mInStream.close();
+             		 mInStream = null;
+             	}
+             	if (mOutStream != null) {
+             		mOutStream.close();
+             		mOutStream = null;
+             	}
+             } catch (IOException e) {
+                 e.printStackTrace();
+                 mInStream = null;
+                 mOutStream = null;
+             }
+        	 try {
+	            this.mInStream = in;
+	            this.mOutStream = out;
+        	 }catch (Exception e) {
+	        	this.mInStream = null;
+	        	this.mOutStream = null;
+	        }
+        }
+        
         /**
          * Exit receive thread
          */
@@ -365,4 +403,22 @@ public abstract class ReaderHelper {
             return nResult;
         }
     }
+
+
+	public ReaderBase getmReader() {
+		return mReader;
+	}
+
+	public RXTXListener getmListener() {
+		return mListener;
+	}
+
+	public ModuleConnector getmConnector() {
+		return mConnector;
+	}
+
+	public void setmConnector(ModuleConnector mConnector) {
+		this.mConnector = mConnector;
+	}
+    
 }
