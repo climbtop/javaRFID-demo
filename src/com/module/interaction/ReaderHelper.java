@@ -138,7 +138,6 @@ public abstract class ReaderHelper {
              mReader = null;
          }
     	 if (mConnector != null) {
-    		 mConnector.disConnect();
              mConnector = null;
          }
     	 mListener = null;
