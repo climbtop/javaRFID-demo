@@ -36,7 +36,7 @@ public class RfidTcpTest {
 			// TODO Auto-generated method stub
 			System.out.println("sendData: " + StringTool.byteArrayToString(btArySendData, 0, btArySendData.length));
 			
-			TimeTool.spend();
+			//TimeTool.spend();
 		}
 
 		@Override
@@ -45,8 +45,7 @@ public class RfidTcpTest {
 			 while(mReaderHelper.isAlive()){
 				 try{
 					 mReaderHelper.getmConnector().reConnect();
-					 ((RFIDReaderHelper) mReaderHelper).setWorkAntenna((byte) 0xff, (byte)circleTool.next());
-					 ((RFIDReaderHelper) mReaderHelper).realTimeInventory((byte) 0xff,(byte)0x01);
+					 onInquiryReader((RFIDReaderHelper) mReaderHelper);
 					 break;
 				 }catch(Exception e){
 					 e.printStackTrace();
@@ -65,7 +64,7 @@ public class RfidTcpTest {
 		
 		final ReaderConnector mConnector = new ReaderConnector();
 		//mReaderHelper = mConnector.connectCom("COM7", 115200);
-		mReaderHelper = mConnector.connectNet("192.168.1.224", 4001);
+		mReaderHelper = mConnector.connectNet("192.168.1.220", 4001);
 		if(mReaderHelper != null) {
 			System.out.println("Connect success!");
 			try {
@@ -73,8 +72,7 @@ public class RfidTcpTest {
 				mReaderHelper.setRXTXListener(mListener);
 				//((RFIDReaderHelper) mReaderHelper).getTagMask((byte) 0xff);
 				
-				((RFIDReaderHelper) mReaderHelper).setWorkAntenna((byte) 0xff, (byte)circleTool.next());
-				((RFIDReaderHelper) mReaderHelper).realTimeInventory((byte) 0xff,(byte)0x01);
+				onInquiryReader((RFIDReaderHelper) mReaderHelper);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -120,8 +118,7 @@ public class RfidTcpTest {
 		protected void onInventoryTagEnd(RXInventoryTag.RXInventoryTagEnd endTag) {
 			printEpcSet("onInventoryTag");
 			//System.out.println("inventory end:" + endTag.mTotalRead);
-			((RFIDReaderHelper) mReaderHelper).setWorkAntenna((byte) 0xff, (byte)circleTool.next());
-			((RFIDReaderHelper) mReaderHelper).realTimeInventory((byte) 0xff,(byte)0x01);
+			onInquiryReader((RFIDReaderHelper) mReaderHelper);
 		}
 		
 		@Override
@@ -193,12 +190,16 @@ public class RfidTcpTest {
 	
 	//######################################################################
 	
-	static void initRfidReader(RFIDReaderHelper mReaderHelper){
-		//mReaderHelper.setWorkAntenna((byte) 0xff, (byte) 0x00);
-		//mReaderHelper.setWorkAntenna((byte) 0xff, (byte) 0x01);
-		//mReaderHelper.setWorkAntenna((byte) 0xff, (byte) 0x02);
-		//mReaderHelper.setWorkAntenna((byte) 0xff, (byte) 0x03);
-		//mReaderHelper.getWorkAntenna((byte) 0xff);
+	public static void onInquiryReader(RFIDReaderHelper mReaderHelper) {
+		if (mReaderHelper == null)
+			return;
+		mReaderHelper.setWorkAntenna((byte) 0xff, (byte) circleTool.next());
+		try {
+			Thread.sleep(2);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		mReaderHelper.realTimeInventory((byte) 0xff, (byte) 0x01);
 	}
 	
 	
